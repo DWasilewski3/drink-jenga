@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drinking Jenga - Stay Hydrated!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wood-overlay"></div>
+  
+  <!-- Setup Screen -->
+  <div id="setup-screen" class="screen active">
+    <div class="container">
+      <header class="header">
+        <h1 class="title">🏗️ Drinking Jenga</h1>
+        <p class="subtitle">Pull a block. Complete the task. Stay hydrated!</p>
+      </header>
+
+      <div class="setup-card">
+        <div class="form-group">
+          <label for="player-count" class="form-label">
+            <span class="label-icon">👥</span>
+            Number of Players
+          </label>
+          <div class="number-input-wrapper">
+            <button type="button" class="number-btn minus" aria-label="Decrease">−</button>
+            <input 
+              type="number" 
+              id="player-count" 
+              class="number-input" 
+              value="4" 
+              min="2" 
+              max="20"
+              aria-describedby="player-hint"
+            >
+            <button type="button" class="number-btn plus" aria-label="Increase">+</button>
+          </div>
+          <small id="player-hint" class="form-hint">2-20 players</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">🎯</span>
+            Difficulty Levels
+          </label>
+          <p class="form-hint">Select at least one difficulty</p>
+          
+          <div class="difficulty-toggles">
+            <label class="toggle-wrapper">
+              <input type="checkbox" id="calm-toggle" class="toggle-input" checked>
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+              <span class="toggle-label">
+                <span class="difficulty-name">Calm</span>
+                <span class="difficulty-desc">Light & easy</span>
+              </span>
+            </label>
+
+            <label class="toggle-wrapper">
+              <input type="checkbox" id="mild-toggle" class="toggle-input">
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+              <span class="toggle-label">
+                <span class="difficulty-name">Mild</span>
+                <span class="difficulty-desc">Moderate fun</span>
+              </span>
+            </label>
+
+            <label class="toggle-wrapper">
+              <input type="checkbox" id="crazy-toggle" class="toggle-input">
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+              <span class="toggle-label">
+                <span class="difficulty-name">Crazy</span>
+                <span class="difficulty-desc">Wild & intense</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <button id="start-btn" class="btn btn-primary btn-large">
+          <span class="btn-icon">🎮</span>
+          Start Game
+        </button>
+      </div>
+
+      <footer class="setup-footer">
+        <p>Remember: Drink responsibly... water! 💧</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game-screen" class="screen">
+    <div class="container">
+      <header class="game-header">
+        <h1 class="game-title">Drinking Jenga</h1>
+        <div class="player-indicator">
+          <span class="player-label">Current Turn:</span>
+          <span id="current-player" class="player-name">Player 1</span>
+        </div>
+      </header>
+
+      <div class="task-area">
+        <div id="task-card" class="task-card">
+          <div class="task-card-inner">
+            <div class="card-decoration top-left"></div>
+            <div class="card-decoration top-right"></div>
+            <div class="card-decoration bottom-left"></div>
+            <div class="card-decoration bottom-right"></div>
+            <p id="task-text" class="task-text">Pull a block to reveal your task!</p>
+            <div id="task-difficulty" class="task-difficulty"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-controls">
+        <button id="pull-btn" class="btn btn-primary btn-pull">
+          <span class="btn-icon">🧱</span>
+          Pull a Block!
+        </button>
+        
+        <div class="secondary-controls">
+          <button id="tower-fell-btn" class="btn btn-danger">
+            <span class="btn-icon">💥</span>
+            Tower Fell!
+          </button>
+          <button id="new-game-btn" class="btn btn-secondary">
+            <span class="btn-icon">🔄</span>
+            New Game
+          </button>
+        </div>
+      </div>
+
+      <div class="game-stats">
+        <div class="stat">
+          <span class="stat-label">Tasks Completed</span>
+          <span id="tasks-completed" class="stat-value">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Blocks Remaining</span>
+          <span id="blocks-remaining" class="stat-value">54</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Penalty Modal -->
+  <div id="penalty-modal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-card penalty-card">
+        <div class="modal-header">
+          <span class="modal-icon">💥</span>
+          <h2 class="modal-title">Tower Collapsed!</h2>
+        </div>
+        <div class="modal-body">
+          <p id="penalty-player" class="penalty-player">Player 1</p>
+          <p class="penalty-intro">Your penalty is:</p>
+          <p id="penalty-text" class="penalty-text">Loading penalty...</p>
+        </div>
+        <div class="modal-footer">
+          <button id="penalty-done-btn" class="btn btn-primary">
+            <span class="btn-icon">✓</span>
+            Penalty Complete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fuse Timer Modal -->
+  <div id="fuse-modal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-card fuse-card">
+        <div class="fuse-header">
+          <span class="fuse-icon">💣</span>
+          <h2 class="fuse-title" id="fuse-task-title">Hot Potato!</h2>
+        </div>
+        <div class="fuse-body">
+          <p id="fuse-task-text" class="fuse-task-text">Pass it around! When the fuse runs out...</p>
+          <div class="fuse-container">
+            <div class="fuse-wire">
+              <div class="fuse-spark" id="fuse-spark"></div>
+              <div class="fuse-burned" id="fuse-burned"></div>
+            </div>
+            <div class="fuse-bomb" id="fuse-bomb">
+              <span class="bomb-emoji">💣</span>
+            </div>
+          </div>
+          <p class="fuse-warning" id="fuse-warning">Keep passing!</p>
+        </div>
+        <div class="fuse-controls" id="fuse-controls">
+          <button id="fuse-skip-btn" class="btn btn-danger btn-skip">
+            <span class="btn-icon">⏭️</span>
+            Skip / Explode Now!
+          </button>
+        </div>
+        <div class="fuse-result hidden" id="fuse-result">
+          <div class="explosion-effect" id="explosion-effect">
+            <span class="explosion-emoji">💥</span>
+          </div>
+          <p class="fuse-result-text" id="fuse-result-text">BOOM! Whoever has it drinks!</p>
+          <button id="fuse-done-btn" class="btn btn-primary">
+            <span class="btn-icon">✓</span>
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Countdown Timer Modal -->
+  <div id="countdown-modal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-card countdown-card">
+        <div class="countdown-header">
+          <span class="countdown-icon">⏱️</span>
+          <h2 class="countdown-title" id="countdown-title">Challenge Time!</h2>
+        </div>
+        <div class="countdown-body">
+          <p id="countdown-task-text" class="countdown-task-text">Hold the position!</p>
+          <div class="countdown-display">
+            <div class="countdown-circle" id="countdown-circle">
+              <svg class="countdown-svg" viewBox="0 0 100 100">
+                <circle class="countdown-bg" cx="50" cy="50" r="45"></circle>
+                <circle class="countdown-progress" id="countdown-progress" cx="50" cy="50" r="45"></circle>
+              </svg>
+              <span class="countdown-number" id="countdown-number">30</span>
+            </div>
+          </div>
+          <p class="countdown-status" id="countdown-status">Get ready...</p>
+        </div>
+        <div class="countdown-controls">
+          <button id="countdown-start-btn" class="btn btn-primary">
+            <span class="btn-icon">▶️</span>
+            Start!
+          </button>
+          <button id="countdown-fail-btn" class="btn btn-danger hidden">
+            <span class="btn-icon">❌</span>
+            Failed / Skip
+          </button>
+          <button id="countdown-done-btn" class="btn btn-primary hidden">
+            <span class="btn-icon">✓</span>
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voting Modal -->
+  <div id="voting-modal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-card voting-card">
+        <div class="voting-header">
+          <span class="voting-icon">🗳️</span>
+          <h2 class="voting-title">Vote!</h2>
+        </div>
+        <div class="voting-body">
+          <p id="voting-question" class="voting-question">Who is most likely to...?</p>
+          <div id="voting-grid" class="voting-grid">
+            <!-- Player buttons will be generated here -->
+          </div>
+          <div class="voting-tally" id="voting-tally">
+            <p class="tally-title">Votes cast: <span id="vote-count">0</span> / <span id="vote-total">4</span></p>
+          </div>
+        </div>
+        <div class="voting-result hidden" id="voting-result">
+          <div class="winner-announcement">
+            <span class="winner-crown">👑</span>
+            <p class="winner-label">The votes are in!</p>
+            <p class="winner-name" id="winner-name">Player 1</p>
+            <p class="winner-drinks" id="winner-drinks">drinks 8 sips!</p>
+          </div>
+          <button id="voting-done-btn" class="btn btn-primary">
+            <span class="btn-icon">✓</span>
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spinner Modal -->
+  <div id="spinner-modal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-card spinner-card">
+        <div class="spinner-header">
+          <span class="spinner-icon">🎡</span>
+          <h2 class="spinner-title" id="spinner-title">Spin the Wheel!</h2>
+        </div>
+        <div class="spinner-body">
+          <p id="spinner-task-text" class="spinner-task-text">Spin to find out who...</p>
+          <div class="wheel-container">
+            <div class="wheel-pointer">▼</div>
+            <div class="wheel" id="wheel">
+              <!-- Wheel segments will be generated here -->
+            </div>
+          </div>
+          <button id="spin-btn" class="btn btn-primary spin-btn">
+            <span class="btn-icon">🎰</span>
+            SPIN!
+          </button>
+        </div>
+        <div class="spinner-result hidden" id="spinner-result">
+          <div class="spinner-winner">
+            <span class="spinner-winner-icon">🎯</span>
+            <p class="spinner-winner-label">The wheel chose:</p>
+            <p class="spinner-winner-name" id="spinner-winner-name">Player 1</p>
+            <p class="spinner-winner-task" id="spinner-winner-task">drinks 10 sips!</p>
+          </div>
+          <button id="spinner-done-btn" class="btn btn-primary">
+            <span class="btn-icon">✓</span>
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="sounds.js"></script>
+  <script src="tasks.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
